@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<!-- Comment -->
+	<head>
+		<meta charset = "utf-8">
+		 <title> Craps Game </title>
+		 <style>
+		 	table, tr, td {border:  1px solid black;}
+		 	body {
+		 		background-color: orangered;
+		 	}
+		 </style>
+	</head>
+		<body>
+			<h1> Craps </h1>
+			<table>
+				<tr> <td> Die 1: </td> <td id="firstDie"> </td> </tr>
+				<tr> <td> Die 2: </td> <td id="secondDie"> </td> </tr>
+				<tr> <td> Sum: </td> <td id="sum"> </td> </tr>
+				<tr> <td> Point: </td> <td id="point"> </td> </tr>
+				<tr> <td> Games Won: </td> <td id="gamesWon"> 0 </td> </tr>
+				<tr> <td> Games Lost: </td> <td id="gamesLost"> 0 </td> </tr>
+				<tr> <td> Money: </td> <td id="money"> 100 </td> </tr>
+				<tr> <td colspan="2">
+			<input type="button" id="roll" value="Roll" onclick="play()"> </td> </tr>
+			<tr> <td colspan="2"> <input type="button" id="reset" value="Reset" onclick="reset()"> </td> </tr>
+			<tr> <td colspan="2" id="comment"> Roll Dice to Begin </td> </tr>
+		    </table>
+		</body>
+		<script> 
+				const WON = 0, LOST = 1, CONTINUE_ROLLING = 2;
+				let firstRoll = true, 
+				myPoint = 0,
+				gameStatus = CONTINUE_ROLLING,
+				gamesWon = 0,
+				gamesLost = 0;
+				function play() {
+					sumOfDice = rollDice();
+					document.getElementById("sum").innerHTML = sumOfDice;
+					if (firstRoll){
+						switch(sumOfDice) {
+							case 7: case 11: 
+								gameStatus = WON;
+								document.getElementById("point").innerHTML = "";
+								document.getElementById("comment").innerHTML = "WIN BY NATURAL";
+								gamesWon++;
+								document.getElementById("gamesWon").innerHTML = gamesWon;
+								break;
+							case 2: case 3: case 12: 
+								gameStatus = LOST;
+								document.getElementById("point").innerHTML = "";
+								document.getElementById("comment").innerHTML = "LOSS BY CRAPS";
+								gamesLost++;
+								document.getElementById("gamesLost").innerHTML = gamesLost;
+								break;
+							default:
+								myPoint = sumOfDice;
+								document.getElementById("point").innerHTML = myPoint;
+								gameStatus = CONTINUE_ROLLING;
+								firstRoll = false;
+								break;
+						}
+					}
+					else {
+						if (sumOfDice == myPoint ){    // win by making point
+							gameStatus = WON;
+							document.getElementById("comment").innerHTML = "WIN BY PASSING";
+							gamesWon++;
+							document.getElementById("gamesWon").innerHTML = gamesWon;
+						}
+						else  if (sumOfDice == 7){       // lose by rolling 7
+							gameStatus = LOST;
+							document.getElementById("comment").innerHTML = "LOSS BY SEVEND-OUT";
+							gamesLost++;
+							document.getElementById("gamesLost").innerHTML = gamesLost;
+						}
+					}
+				}
+				function rollDice() {
+					let die1 = Math.floor(1 + Math.random() * 6);
+					let die2 = Math.floor(1 + Math.random() * 6);
+					document.getElementById("firstDie").innerHTML = die1;
+					document.getElementById("secondDie").innerHTML = die2;
+					return die1 + die2;
+				}
+				function reset() {
+					document.getElementById("gamesLost").innerHTML = 0;
+					document.getElementById("gamesWon").innerHTML = 0;
+				}
+		</script>
+</html>
